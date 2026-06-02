@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Simply Logo Slider
+   ========================================================================== */
+
+/* ---- Outer container ---------------------------------------------------- */
+
+.sls-slider {
+	overflow: hidden;
+	width: 100%;
+}
+
+/* ---- Track -------------------------------------------------------------- */
+
+.sls-track {
+	display: flex;
+	align-items: center;
+	width: max-content; /* shrink-wraps to logo content */
+}
+
+/* ---- Individual logo ---------------------------------------------------- */
+
+.sls-logo {
+	display: inline-flex;
+	align-items: center;
+	flex-shrink: 0;
+	margin-right: var( --sls-gap, 80px );
+	text-decoration: none;
+}
+
+.sls-logo img {
+	height: var( --sls-height, 60px );
+	width: auto;
+	display: block;
+	filter: grayscale( 1 );
+	opacity: 0.65;
+	transition: filter 0.35s ease, opacity 0.35s ease;
+}
+
+.sls-logo:hover img {
+	filter: grayscale( 0 );
+	opacity: 1;
+}
+
+/* ---- Animation — only when JS adds .sls-slider--active ----------------- */
+
+.sls-slider--active .sls-track {
+	animation: sls-scroll var( --sls-speed, 30s ) linear infinite;
+}
+
+.sls-slider--paused .sls-track {
+	animation-play-state: paused;
+}
+
+@keyframes sls-scroll {
+	from { transform: translateX( 0 ); }
+	to   { transform: translateX( -50% ); }
+}
