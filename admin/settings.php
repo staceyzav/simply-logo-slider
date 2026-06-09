@@ -32,7 +32,13 @@ function sls_settings_page_cb() {
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Logo Slider Settings', 'simply-logo-slider' ); ?></h1>
-		<p style="color:#666;margin-bottom:24px"><?php esc_html_e( 'Default values used by [simply_logos]. Override per-instance with shortcode attributes: height="60" speed="30" gap="80".', 'simply-logo-slider' ); ?></p>
+		<p style="color:#666;margin-bottom:8px"><?php esc_html_e( 'Default values used by [simply_logos]. Override per-instance with shortcode attributes: height="60" speed="30" gap="80".', 'simply-logo-slider' ); ?></p>
+		<p style="margin-bottom:24px">
+			<?php printf(
+				esc_html__( 'Part of the Simply Design plugin suite. %s', 'simply-logo-slider' ),
+				'<a href="https://simplydesign.com" target="_blank" rel="noopener">simplydesign.com</a>'
+			); ?>
+		</p>
 
 		<form method="post" action="options.php">
 			<?php settings_fields( 'sls_settings_group' ); ?>

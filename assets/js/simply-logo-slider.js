@@ -1,42 +1,114 @@
-( function() {
+/**
+ * Simply Logo Slider — simply-logo-slider.js
+ *
+ * Transform-based slider: a JS `position` variable drives translateX on the
+ * track. Auto-scroll and drag both update the same variable — no scrollLeft,
+ * no browser scroll engine, no jump or snap conflicts.
+ */
+
+( function () {
+
 	'use strict';
 
 	function initSlider( slider ) {
+		if ( slider.dataset.slsInit ) return;
+		slider.dataset.slsInit = 'true';
+
 		var track = slider.querySelector( '.sls-track' );
 		if ( ! track ) return;
 
 		var logos = Array.prototype.slice.call( track.querySelectorAll( '.sls-logo' ) );
 		if ( ! logos.length ) return;
 
-		// Only animate if logos overflow the container
-		if ( track.scrollWidth <= slider.offsetWidth ) return;
+		var setWidth = track.scrollWidth; // width of one full set of logos
+		if ( setWidth <= 0 ) return;
 
-		// Clone all logos and append — creates the seamless loop
-		// translateX(-50%) lands back at the start of the originals
-		logos.forEach( function( logo ) {
-			var clone = logo.cloneNode( true );
-			clone.setAttribute( 'aria-hidden', 'true' );
-			if ( clone.tagName === 'A' ) {
-				clone.setAttribute( 'tabindex', '-1' );
-			}
-			track.appendChild( clone );
-		} );
+		// Clone enough sets so track always exceeds the container
+		var sets = Math.max( 2, Math.ceil( ( slider.offsetWidth * 2 ) / setWidth ) + 1 );
+		for ( var s = 0; s < sets; s++ ) {
+			logos.forEach( function ( logo ) {
+				var clone = logo.cloneNode( true );
+				clone.setAttribute( 'aria-hidden', 'true' );
+				if ( clone.tagName === 'A' ) clone.setAttribute( 'tabindex', '-1' );
+				track.appendChild( clone );
+			} );
+		}
+
+		var speedRaw = getComputedStyle( slider ).getPropertyValue( '--sls-speed' ).trim();
+		var speed    = parseFloat( speedRaw ) || 30;
+		var pxPerMs  = setWidth / ( speed * 1000 );
+
+		var position    = 0;
+		var isHovered   = false;
+		var isDragging  = false;
+		var startX      = 0;
+		var posStart    = 0;
+		var dragDist    = 0;
+		var lastTs      = null;
 
 		slider.classList.add( 'sls-slider--active' );
 
-		// Freeze on hover
-		slider.addEventListener( 'mouseenter', function() {
-			slider.classList.add( 'sls-slider--paused' );
+		function setPos( px ) {
+			position = ( ( px % setWidth ) + setWidth ) % setWidth;
+			track.style.transform = 'translateX(' + ( -position ) + 'px)';
+		}
+
+		function step( ts ) {
+			if ( lastTs !== null && ! isHovered && ! isDragging ) {
+				setPos( position + pxPerMs * ( ts - lastTs ) );
+			}
+			lastTs = ts;
+			requestAnimationFrame( step );
+		}
+
+		requestAnimationFrame( step );
+
+		slider.addEventListener( 'mouseenter', function () { isHovered = true; } );
+		slider.addEventListener( 'mouseleave', function () {
+			if ( ! isDragging ) isHovered = false;
 		} );
-		slider.addEventListener( 'mouseleave', function() {
-			slider.classList.remove( 'sls-slider--paused' );
+
+		function dragStart( x ) {
+			isDragging = true;
+			isHovered  = true;
+			startX     = x;
+			posStart   = position;
+			dragDist   = 0;
+			slider.classList.add( 'is-dragging' );
+		}
+
+		function dragMove( x ) {
+			if ( ! isDragging ) return;
+			dragDist = Math.abs( x - startX );
+			setPos( posStart + ( startX - x ) );
+		}
+
+		function dragEnd() {
+			if ( ! isDragging ) return;
+			isDragging = false;
+			slider.classList.remove( 'is-dragging' );
+			if ( ! slider.matches( ':hover' ) ) isHovered = false;
+		}
+
+		slider.addEventListener( 'mousedown',  function ( e ) { dragStart( e.pageX ); } );
+		window.addEventListener( 'mousemove',  function ( e ) { dragMove( e.pageX ); } );
+		window.addEventListener( 'mouseup',    dragEnd );
+
+		slider.addEventListener( 'touchstart', function ( e ) {
+			dragStart( e.touches[0].pageX );
+		}, { passive: true } );
+		slider.addEventListener( 'touchmove', function ( e ) {
+			dragMove( e.touches[0].pageX );
+		}, { passive: true } );
+		slider.addEventListener( 'touchend', dragEnd );
+
+		slider.addEventListener( 'click', function ( e ) {
+			if ( dragDist > 5 ) e.preventDefault();
 		} );
 	}
 
-	// Measure after all images have loaded so dimensions are accurate
-	window.addEventListener( 'load', function() {
-		var sliders = document.querySelectorAll( '[data-sls]' );
-		sliders.forEach( function( slider ) {
+	window.addEventListener( 'load', function () {
+		document.querySelectorAll( '[data-sls]' ).forEach( function ( slider ) {
 			initSlider( slider );
 		} );
 	} );

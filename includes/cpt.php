@@ -53,17 +53,32 @@ function sls_add_meta_box() {
 
 function sls_meta_box_cb( $post ) {
 	wp_nonce_field( 'sls_save_meta', 'sls_nonce' );
-	$url = get_post_meta( $post->ID, '_logo_url', true );
+	$url   = get_post_meta( $post->ID, '_logo_url',   true );
+	$boost = get_post_meta( $post->ID, '_logo_boost',  true );
 	?>
 	<style>
+		.sls-meta-field { margin-bottom: 16px; }
 		.sls-meta-field label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
-		.sls-meta-field input { width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 13px; }
+		.sls-meta-field input[type="url"] { width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 13px; }
+		.sls-meta-tip { background: #f6f7f7; border-left: 3px solid #dba617; padding: 10px 12px; margin-bottom: 16px; font-size: 12px; line-height: 1.6; color: #3c434a; }
+		.sls-meta-tip strong { display: block; margin-bottom: 2px; }
 	</style>
+	<div class="sls-meta-tip">
+		<strong><?php esc_html_e( 'For best results: crop the image file tight.', 'simply-logo-slider' ); ?></strong>
+		<?php esc_html_e( 'Remove any padding, whitespace, or dead space around the logo before uploading. All logos are sized by height — extra space makes a logo appear smaller than the others.', 'simply-logo-slider' ); ?>
+	</div>
 	<div class="sls-meta-field">
 		<label for="logo_url"><?php esc_html_e( 'Link URL', 'simply-logo-slider' ); ?> <em style="font-weight:400;color:#888">(optional — opens in new tab)</em></label>
 		<input type="url" id="logo_url" name="logo_url"
 			value="<?php echo esc_attr( $url ); ?>"
 			placeholder="https://...">
+	</div>
+	<div class="sls-meta-field">
+		<label>
+			<input type="checkbox" name="logo_boost" value="1" <?php checked( $boost, '1' ); ?>>
+			<?php esc_html_e( 'Boost size — makes this logo ~30% taller than the rest', 'simply-logo-slider' ); ?>
+		</label>
+		<p style="color:#888;font-size:12px;margin:4px 0 0 20px"><?php esc_html_e( 'Use when a logo still looks small after cropping tight.', 'simply-logo-slider' ); ?></p>
 	</div>
 	<?php
 }
@@ -83,6 +98,8 @@ function sls_save_meta( $post_id ) {
 	if ( isset( $_POST['logo_url'] ) ) {
 		update_post_meta( $post_id, '_logo_url', esc_url_raw( $_POST['logo_url'] ) );
 	}
+
+	update_post_meta( $post_id, '_logo_boost', isset( $_POST['logo_boost'] ) ? '1' : '' );
 }
 
 

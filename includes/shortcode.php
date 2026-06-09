@@ -54,20 +54,22 @@ function sls_shortcode( $atts ) {
 
 			<?php while ( $logos->have_posts() ) : $logos->the_post(); ?>
 				<?php
-				$url     = get_post_meta( get_the_ID(), '_logo_url', true );
+				$url     = get_post_meta( get_the_ID(), '_logo_url',   true );
+				$boost   = get_post_meta( get_the_ID(), '_logo_boost',  true );
 				$img_url = get_the_post_thumbnail_url( get_the_ID(), 'large' );
 				$alt     = esc_attr( get_the_title() );
+				$class   = 'sls-logo' . ( $boost ? ' sls-logo--boost' : '' );
 
 				if ( ! $img_url ) continue;
 
-				$img = '<img src="' . esc_url( $img_url ) . '" alt="' . $alt . '" loading="lazy">';
+				$img = '<img src="' . esc_url( $img_url ) . '" alt="' . $alt . '" loading="eager">';
 				?>
 				<?php if ( $url ) : ?>
-					<a class="sls-logo" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer" title="<?php echo $alt; ?>">
+					<a class="<?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer" title="<?php echo $alt; ?>">
 						<?php echo $img; ?>
 					</a>
 				<?php else : ?>
-					<span class="sls-logo">
+					<span class="<?php echo esc_attr( $class ); ?>">
 						<?php echo $img; ?>
 					</span>
 				<?php endif; ?>

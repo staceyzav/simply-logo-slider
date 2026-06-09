@@ -14,7 +14,13 @@
 .sls-track {
 	display: flex;
 	align-items: center;
-	width: max-content; /* shrink-wraps to logo content */
+	width: max-content;
+}
+
+/* Not enough logos to scroll — center them instead */
+.sls-slider:not( .sls-slider--active ) .sls-track {
+	width: 100%;
+	justify-content: center;
 }
 
 /* ---- Individual logo ---------------------------------------------------- */
@@ -41,17 +47,19 @@
 	opacity: 1;
 }
 
-/* ---- Animation — only when JS adds .sls-slider--active ----------------- */
-
-.sls-slider--active .sls-track {
-	animation: sls-scroll var( --sls-speed, 30s ) linear infinite;
+/* Boost — makes this logo ~30% taller than its neighbors */
+.sls-logo--boost img {
+	height: calc( var( --sls-height, 60px ) * 1.3 );
 }
 
-.sls-slider--paused .sls-track {
-	animation-play-state: paused;
+/* Drag-to-scroll — cursor hint + touch momentum */
+.sls-slider {
+	cursor: grab;
+	-webkit-overflow-scrolling: touch;
 }
 
-@keyframes sls-scroll {
-	from { transform: translateX( 0 ); }
-	to   { transform: translateX( -50% ); }
+.sls-slider.is-dragging {
+	cursor: grabbing;
 }
+
+/* Animation driven by JS scrollLeft — no CSS animation needed */
