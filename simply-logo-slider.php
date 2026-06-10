@@ -5,16 +5,19 @@
  * Description: Auto-scrolling logo strip. Grayscale by default, color on hover, pauses on hover. Only animates when logos exceed container width.
  * Author:      Simply Design
  * Author URI:  https://simplydesign.com
- * Version:     1.2.0
+ * Version:     1.2.1
  * License:     GPL-2.0-or-later
  * Text Domain: simply-logo-slider
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'SLS_VERSION', '1.2.0' );
+define( 'SLS_VERSION', '1.2.1' );
 define( 'SLS_PATH',    plugin_dir_path( __FILE__ ) );
 define( 'SLS_URL',     plugin_dir_url( __FILE__ ) );
+
+require_once SLS_PATH . 'includes/class-github-updater.php';
+new Simply_GitHub_Updater( 'plugin', plugin_basename( __FILE__ ), 'staceyzav/simply-logo-slider', SLS_VERSION );
 
 require_once SLS_PATH . 'includes/cpt.php';
 require_once SLS_PATH . 'includes/shortcode.php';
