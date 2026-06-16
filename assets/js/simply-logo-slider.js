@@ -20,11 +20,14 @@
 		var logos = Array.prototype.slice.call( track.querySelectorAll( '.sls-logo' ) );
 		if ( ! logos.length ) return;
 
-		var setWidth = track.scrollWidth; // width of one full set of logos
+		// scrollWidth before cloning = sum of logo widths + (n-1) gaps.
+		// We need to add one more gap to get the correct loop point.
+		var gap = parseFloat( getComputedStyle( track ).columnGap ) || 0;
+		var setWidth = track.scrollWidth + gap;
 		if ( setWidth <= 0 ) return;
 
 		// Clone enough sets so track always exceeds the container
-		var sets = Math.max( 2, Math.ceil( ( slider.offsetWidth * 2 ) / setWidth ) + 1 );
+		var sets = Math.max( 3, Math.ceil( ( slider.offsetWidth * 3 ) / setWidth ) + 2 );
 		for ( var s = 0; s < sets; s++ ) {
 			logos.forEach( function ( logo ) {
 				var clone = logo.cloneNode( true );
