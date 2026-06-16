@@ -63,3 +63,26 @@
 }
 
 /* Animation driven by JS scrollLeft — no CSS animation needed */
+
+/* ---- Static mode — [simply_logos static="1"] ----------------------------- */
+
+.sls-static {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var( --sls-gap, 80px );
+}
+
+.sls-static .sls-logo {
+	margin-right: 0;
+}
+
+.sls-static .sls-logo img {
+	filter: none;
+	opacity: 1;
+}
+
+.sls-static .sls-logo:hover img {
+	filter: none;
+	opacity: 0.8;
+}

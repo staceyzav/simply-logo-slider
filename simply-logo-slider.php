@@ -5,14 +5,14 @@
  * Description: Auto-scrolling logo strip. Grayscale by default, color on hover, pauses on hover. Only animates when logos exceed container width.
  * Author:      Simply Design
  * Author URI:  https://simplydesign.com
- * Version:     1.2.2
+ * Version:     1.2.3
  * License:     GPL-2.0-or-later
  * Text Domain: simply-logo-slider
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'SLS_VERSION', '1.2.1' );
+define( 'SLS_VERSION', '1.2.3' );
 define( 'SLS_PATH',    plugin_dir_path( __FILE__ ) );
 define( 'SLS_URL',     plugin_dir_url( __FILE__ ) );
 

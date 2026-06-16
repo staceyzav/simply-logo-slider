@@ -23,19 +23,23 @@ function sls_shortcode( $atts ) {
 		'speed'  => get_option( 'sls_speed',  30 ),
 		'gap'    => get_option( 'sls_gap',     80 ),
 		'limit'  => -1,
+		'static' => '0',
+		'order'  => 'ASC',
 	), $atts, 'simply_logos' );
 
-	$height = absint( $atts['height'] );
-	$speed  = absint( $atts['speed'] );
-	$gap    = absint( $atts['gap'] );
-	$limit  = intval( $atts['limit'] );
+	$height    = absint( $atts['height'] );
+	$speed     = absint( $atts['speed'] );
+	$gap       = absint( $atts['gap'] );
+	$limit     = intval( $atts['limit'] );
+	$is_static = ! empty( $atts['static'] ) && $atts['static'] !== '0';
+	$order     = strtoupper( $atts['order'] ) === 'DESC' ? 'DESC' : 'ASC';
 
 	$logos = new WP_Query( array(
 		'post_type'      => 'simply_logo',
 		'posts_per_page' => $limit,
 		'post_status'    => 'publish',
 		'orderby'        => 'menu_order',
-		'order'          => 'ASC',
+		'order'          => $order,
 	) );
 
 	if ( ! $logos->have_posts() ) {
@@ -48,6 +52,26 @@ function sls_shortcode( $atts ) {
 	);
 
 	ob_start();
+
+	if ( $is_static ) : ?>
+	<div class="sls-static" style="--sls-gap: <?php echo $gap; ?>px; --sls-height: <?php echo $height; ?>px;">
+		<?php while ( $logos->have_posts() ) : $logos->the_post();
+			$url   = get_post_meta( get_the_ID(), '_logo_url',  true );
+			$boost = get_post_meta( get_the_ID(), '_logo_boost', true );
+			$img_url = get_the_post_thumbnail_url( get_the_ID(), 'large' );
+			$alt   = esc_attr( get_the_title() );
+			$class = 'sls-logo' . ( $boost ? ' sls-logo--boost' : '' );
+			if ( ! $img_url ) continue;
+			$img = '<img src="' . esc_url( $img_url ) . '" alt="' . $alt . '" loading="eager">';
+			if ( $url ) :
+				?><a class="<?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener noreferrer" title="<?php echo $alt; ?>"><?php echo $img; ?></a><?php
+			else :
+				?><span class="<?php echo esc_attr( $class ); ?>"><?php echo $img; ?></span><?php
+			endif;
+		endwhile; wp_reset_postdata(); ?>
+	</div>
+	<?php return ob_get_clean();
+	endif;
 	?>
 	<div class="sls-slider" style="<?php echo esc_attr( $inline ); ?>" data-sls>
 		<div class="sls-track">
