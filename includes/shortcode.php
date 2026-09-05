@@ -58,7 +58,7 @@ function sls_shortcode( $atts ) {
 		<?php while ( $logos->have_posts() ) : $logos->the_post();
 			$url   = get_post_meta( get_the_ID(), '_logo_url',  true );
 			$boost = get_post_meta( get_the_ID(), '_logo_boost', true );
-			$img_url = get_the_post_thumbnail_url( get_the_ID(), 'large' );
+			$img_url = get_the_post_thumbnail_url( get_the_ID(), 'medium' );
 			$alt   = esc_attr( get_the_title() );
 			$class = 'sls-logo' . ( $boost ? ' sls-logo--boost' : '' );
 			if ( ! $img_url ) continue;
@@ -80,7 +80,7 @@ function sls_shortcode( $atts ) {
 				<?php
 				$url     = get_post_meta( get_the_ID(), '_logo_url',   true );
 				$boost   = get_post_meta( get_the_ID(), '_logo_boost',  true );
-				$img_url = get_the_post_thumbnail_url( get_the_ID(), 'large' );
+				$img_url = get_the_post_thumbnail_url( get_the_ID(), 'medium' );
 				$alt     = esc_attr( get_the_title() );
 				$class   = 'sls-logo' . ( $boost ? ' sls-logo--boost' : '' );
 
