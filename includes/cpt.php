@@ -59,7 +59,7 @@ function sls_meta_box_cb( $post ) {
 	<style>
 		.sls-meta-field { margin-bottom: 16px; }
 		.sls-meta-field label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
-		.sls-meta-field input[type="url"] { width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 13px; }
+		.sls-meta-field input[type="text"] { width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 13px; }
 		.sls-meta-tip { background: #f6f7f7; border-left: 3px solid #dba617; padding: 10px 12px; margin-bottom: 16px; font-size: 12px; line-height: 1.6; color: #3c434a; }
 		.sls-meta-tip strong { display: block; margin-bottom: 2px; }
 	</style>
@@ -69,9 +69,9 @@ function sls_meta_box_cb( $post ) {
 	</div>
 	<div class="sls-meta-field">
 		<label for="logo_url"><?php esc_html_e( 'Link URL', 'simply-logo-slider' ); ?> <em style="font-weight:400;color:#888">(optional — opens in new tab)</em></label>
-		<input type="url" id="logo_url" name="logo_url"
+		<input type="text" id="logo_url" name="logo_url"
 			value="<?php echo esc_attr( $url ); ?>"
-			placeholder="https://...">
+			placeholder="https://example.com or /relative-path/">
 	</div>
 	<div class="sls-meta-field">
 		<label>
